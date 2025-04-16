@@ -1,0 +1,49 @@
+{
+  "name": "faraday-cage",
+  "version": "0.0.1",
+  "type": "module",
+  "license": "MIT",
+  "description": "A JS sandboxing library with a focus on extensibility",
+  "author": "Andrew Bastin (andrewbastin.k@gmail.com)",
+  "homepage": "https://github.com/AndrewBastin/faraday-cage",
+  "bugs": {
+    "url": "https://github.com/AndrewBastin/faraday-cage/issues"
+  },
+  "keywords": [
+    "sandbox",
+    "scripting"
+  ],
+  "files": [
+    "dist",
+    "index.d.ts",
+    "modules.d.ts"
+  ],
+  "main": "./dist/faraday_cage.umd.cjs",
+  "module": "./dist/faraday_cage.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/main.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
+    },
+    "./modules": {
+      "types": "./dist/modules.d.ts",
+      "require": "./dist/modules.cjs",
+      "import": "./dist/modules.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && tsc --emitDeclarationOnly",
+    "prepare": "pnpm run build"
+  },
+  "devDependencies": {
+    "typescript": "~5.7.3",
+    "vite": "^6.1.1"
+  },
+  "dependencies": {
+    "@jitl/quickjs-wasmfile-release-asyncify": "^0.31.0",
+    "quickjs-emscripten": "^0.31.0"
+  }
+}
