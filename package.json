@@ -1,6 +1,6 @@
 {
   "name": "faraday-cage",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "license": "MIT",
   "description": "A JS sandboxing library with a focus on extensibility",
@@ -28,7 +28,7 @@
       "import": "./dist/index.js"
     },
     "./modules": {
-      "types": "./dist/modules.d.ts",
+      "types": "./dist/modules/index.d.ts",
       "require": "./dist/modules.cjs",
       "import": "./dist/modules.js"
     }
