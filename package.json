@@ -1,6 +1,6 @@
 {
   "name": "faraday-cage",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "license": "MIT",
   "description": "A JS sandboxing library with a focus on extensibility",
@@ -42,10 +42,10 @@
   "devDependencies": {
     "typescript": "~5.7.3",
     "vite": "^6.1.1",
-    "vitest": "^3.1.2"
+    "vitest": "^3.1.2",
+    "@jitl/quickjs-wasmfile-release-asyncify": "^0.31.0"
   },
   "dependencies": {
-    "@jitl/quickjs-wasmfile-release-asyncify": "^0.31.0",
     "quickjs-emscripten": "^0.31.0"
   }
 }
