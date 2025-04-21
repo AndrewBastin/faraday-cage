@@ -1,4 +1,4 @@
-import { defineCageModule } from ".";
+import { defineCageModule } from "./_mod_authoring";
 
 function normalizeModulePath(base: string, request: string): string {
   // If request is already a full URL, return it
