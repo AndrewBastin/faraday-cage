@@ -125,12 +125,30 @@ async function runWithCustomModule() {
 }
 ```
 
-## WASM Module Import
+## WASM Module Requirements
 
-**Note:** Faraday Cage itself doesn't deal with locating WASM modules - that's up to you. The example below uses Vite's `?url` import suffix to get the URL of the QuickJS WASM module, but you can obtain the URL through any method appropriate for your project:
+**Important:** Faraday Cage does not include the QuickJS WASM module. You must install and provide it separately:
+
+```bash
+npm install @jitl/quickjs-wasmfile-release-asyncify
+# or
+yarn add @jitl/quickjs-wasmfile-release-asyncify
+# or
+pnpm add @jitl/quickjs-wasmfile-release-asyncify
+```
+
+This design decision was made to support different build pipelines and bundlers properly, allowing you to handle WASM loading in the way that best fits your project setup.
+
+### Async WASM Requirement
+
+Faraday Cage specifically requires an async-enabled QuickJS WASM module (such as `@jitl/quickjs-wasmfile-release-asyncify`). The Asyncify transform enables synchronous calls from QuickJS to async host functions, which is essential for Faraday Cage's functionality.
+
+### WASM Module Import
+
+The example below uses Vite's `?url` import suffix to get the URL of the QuickJS WASM module, but you can obtain the URL through any method appropriate for your build system:
 
 ```typescript
-// This uses Vite's import feature to get the URL of the WASM file
+// Using Vite's import feature to get the URL of the WASM file
 import asyncWasmLocation from "@jitl/quickjs-wasmfile-release-asyncify/wasm?url"
 
 // Then pass that URL to the sandbox
