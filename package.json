@@ -36,11 +36,13 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && tsc --emitDeclarationOnly",
-    "prepare": "pnpm run build"
+    "prepare": "pnpm run build",
+    "test": "vitest"
   },
   "devDependencies": {
     "typescript": "~5.7.3",
-    "vite": "^6.1.1"
+    "vite": "^6.1.1",
+    "vitest": "^3.1.2"
   },
   "dependencies": {
     "@jitl/quickjs-wasmfile-release-asyncify": "^0.31.0",

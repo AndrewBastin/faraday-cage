@@ -8,5 +8,5 @@ export default defineConfig({
         modules: './lib/modules/index.ts'
       },
     },
-  },
+  }
 })
