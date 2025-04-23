@@ -1,1 +1,1 @@
-export * from "./dist/modules.d.ts"
+export type * from "./dist/modules/index.d.ts"
