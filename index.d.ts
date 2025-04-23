@@ -1,3 +1,3 @@
-export type { default } from "./dist/main.d.ts"
-export type * from "./dist/main.d.ts"
+export { default } from "./dist/main.d.ts"
+export * from "./dist/main.d.ts"
 
