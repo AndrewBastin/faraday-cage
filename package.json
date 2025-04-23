@@ -1,6 +1,6 @@
 {
   "name": "faraday-cage",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "license": "MIT",
   "description": "A JS sandboxing library with a focus on extensibility",
