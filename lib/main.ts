@@ -11,7 +11,7 @@ export type RunCodeResult =
   | { type: "error"; err: Error }
 
 export class FaradayCage {
-  private constructor(private qjs: QuickJSAsyncWASMModule) {}
+  public constructor(private qjs: QuickJSAsyncWASMModule) {}
 
   public static async createFromQJSWasmLocation(wasmLocation: string): Promise<FaradayCage> {
     const qjs = await newQuickJSAsyncWASMModule(
@@ -25,7 +25,7 @@ export class FaradayCage {
     const qjs = await newQuickJSAsyncWASMModuleFromVariant(
       newVariant(
         RELEASE_ASYNC, {
-          wasmLocation: asyncWasmLocation
+          wasmLocation: asyncWasmLocation,
         }
       )
     )
