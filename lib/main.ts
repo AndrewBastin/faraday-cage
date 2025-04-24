@@ -1,9 +1,9 @@
 import {
-  newQuickJSAsyncWASMModule, newVariant, 
+  newQuickJSAsyncWASMModule, newQuickJSAsyncWASMModuleFromVariant, newVariant, 
   QuickJSAsyncWASMModule, RELEASE_ASYNC,
   Scope
 } from "quickjs-emscripten"
-import asyncWasmLocation from "@jitl/quickjs-wasmfile-release-asyncify/wasm?url"
+import ASYNC_VARIANT from "@jitl/quickjs-singlefile-mjs-release-asyncify"
 import { CageModule, CageModuleCtx } from "./modules"
 
 export type RunCodeResult =
@@ -22,9 +22,7 @@ export class FaradayCage {
   }
 
   public static async create(): Promise<FaradayCage> {
-    const qjs = await newQuickJSAsyncWASMModule(
-      newVariant(RELEASE_ASYNC, { wasmLocation: asyncWasmLocation })
-    )
+    const qjs = await newQuickJSAsyncWASMModuleFromVariant(ASYNC_VARIANT)
 
     return new FaradayCage(qjs)
   }
