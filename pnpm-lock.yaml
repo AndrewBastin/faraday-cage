@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@jitl/quickjs-ffi-types':
+        specifier: ^0.31.0
+        version: 0.31.0
       '@jitl/quickjs-singlefile-mjs-release-asyncify':
         specifier: ^0.31.0
         version: 0.31.0

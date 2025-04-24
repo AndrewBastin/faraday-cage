@@ -4,6 +4,10 @@ import {
   Scope
 } from "quickjs-emscripten"
 import asyncWasmLocation from "@jitl/quickjs-wasmfile-release-asyncify/wasm?url"
+
+// @ts-ignore
+import { QuickJSAsyncFFI as asyncFFI } from "@jitl/quickjs-wasmfile-release-asyncify/ffi"
+
 import { CageModule, CageModuleCtx } from "./modules"
 
 export type RunCodeResult =
@@ -11,7 +15,7 @@ export type RunCodeResult =
   | { type: "error"; err: Error }
 
 export class FaradayCage {
-  public constructor(private qjs: QuickJSAsyncWASMModule) {}
+  private constructor(private qjs: QuickJSAsyncWASMModule) {}
 
   public static async createFromQJSWasmLocation(wasmLocation: string): Promise<FaradayCage> {
     const qjs = await newQuickJSAsyncWASMModule(
@@ -22,13 +26,16 @@ export class FaradayCage {
   }
 
   public static async create(): Promise<FaradayCage> {
-    const qjs = await newQuickJSAsyncWASMModuleFromVariant(
-      newVariant(
-        RELEASE_ASYNC, {
-          wasmLocation: asyncWasmLocation,
-        }
-      )
-    )
+    const variant = newVariant(RELEASE_ASYNC, {
+      wasmLocation: asyncWasmLocation,
+    });
+
+    // HACK: Patch importFFI to not do a dynamic import. Dynamic Import for
+    // some reason is broken inside the worker in Hoppscotch that runs the scripts
+    // This is not allowed as `variant.importFFI` is marked readonly via type, so this can break!
+    (variant as any).importFFI = () => Promise.resolve(asyncFFI);
+
+    const qjs = await newQuickJSAsyncWASMModuleFromVariant(variant)
 
     return new FaradayCage(qjs)
   }
