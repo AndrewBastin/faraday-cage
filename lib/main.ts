@@ -3,6 +3,7 @@ import {
   QuickJSAsyncWASMModule, RELEASE_ASYNC,
   Scope
 } from "quickjs-emscripten"
+import asyncWasmLocation from "@jitl/quickjs-wasmfile-release-asyncify/wasm?url"
 import { CageModule, CageModuleCtx } from "./modules"
 
 export type RunCodeResult =
@@ -15,6 +16,14 @@ export class FaradayCage {
   public static async createFromQJSWasmLocation(wasmLocation: string): Promise<FaradayCage> {
     const qjs = await newQuickJSAsyncWASMModule(
       newVariant(RELEASE_ASYNC, { wasmLocation })
+    )
+
+    return new FaradayCage(qjs)
+  }
+
+  public static async create(): Promise<FaradayCage> {
+    const qjs = await newQuickJSAsyncWASMModule(
+      newVariant(RELEASE_ASYNC, { wasmLocation: asyncWasmLocation })
     )
 
     return new FaradayCage(qjs)
