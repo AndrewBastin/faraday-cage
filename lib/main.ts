@@ -14,7 +14,7 @@ import { CageModule, CageModuleCtx } from "./modules"
 
 export type RunCodeResult =
   | { type: "ok"; }
-  | { type: "error"; err: Error }
+  | { type: "error"; err: unknown }
 
 export class FaradayCage {
   private constructor(private qjs: QuickJSAsyncWASMModule) {}
@@ -48,40 +48,41 @@ export class FaradayCage {
   }
 
   public async runCode(code: string, modules: CageModule[]): Promise<RunCodeResult> {
-    await Scope.withScopeAsync(async (scope) => {
-      const runtime = scope.manage(this.qjs.newRuntime())
+    try {
+      await Scope.withScopeAsync(async (scope) => {
+        const runtime = scope.manage(this.qjs.newRuntime())
+        const vm = scope.manage(runtime.newContext())
+        const loadedModuleCtx: CageModuleCtx[] = []
 
-      const vm = scope.manage(runtime.newContext())
+        for (const module of modules) {
+          const modCtx: CageModuleCtx = {
+            vm,
+            runtime,
+            scope,
+            afterScriptExecutionHooks: [],
+          };
 
-      const loadedModuleCtx: CageModuleCtx[] = []
+          module.def(modCtx)
+          loadedModuleCtx.push(modCtx)
+        }
 
-      for (const module of modules) {
-        const modCtx: CageModuleCtx = {
-          vm,
-          runtime,
-          scope,
-          afterScriptExecutionHooks: [],
-        };
+        const result = scope.manage(await vm.evalCodeAsync(code, undefined, { type: "module" }))
 
-        module.def(modCtx)
-
-        loadedModuleCtx.push(modCtx)
-      }
-
-      const result = scope.manage(await vm.evalCodeAsync(code, undefined, { type: "module" }))
-
-      if (result.error) {
-        // TODO: Implement better error mechanism
-        console.log("Execution error:", vm.dump(result.error))
-      } else {
-        for (const ctx of loadedModuleCtx) {
-          for (const afterScriptCallback of ctx.afterScriptExecutionHooks) {
-            afterScriptCallback()
+        if (result.error) {
+          throw vm.dump(result.error);
+        } else {
+          for (const ctx of loadedModuleCtx) {
+            for (const afterScriptCallback of ctx.afterScriptExecutionHooks) {
+              afterScriptCallback()
+            }
           }
         }
-      }
-    })
+      })
 
-    return { type: "ok" }
+      return { type: "ok" };
+    } catch (err) {
+      // Handle any unexpected errors during execution
+      return { type: "error", err: err as Error };
+    }
   }
 }
