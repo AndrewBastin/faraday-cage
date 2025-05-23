@@ -60,6 +60,7 @@ export class FaradayCage {
             runtime,
             scope,
             afterScriptExecutionHooks: [],
+            keepAlivePromises: [],
           };
 
           module.def(modCtx)
@@ -71,10 +72,46 @@ export class FaradayCage {
         if (result.error) {
           throw vm.dump(result.error);
         } else {
+          // Execute any pending jobs from the initial script execution
+          const jobResult = runtime.executePendingJobs();
+          if (jobResult.error) {
+            throw vm.dump(jobResult.error);
+          }
+
+          // Run after-script execution hooks
           for (const ctx of loadedModuleCtx) {
             for (const afterScriptCallback of ctx.afterScriptExecutionHooks) {
               afterScriptCallback()
             }
+          }
+
+          // Wait for all module async operations to complete
+          const allPromises = loadedModuleCtx.flatMap(ctx => ctx.keepAlivePromises)
+          
+          if (allPromises.length > 0) {
+            // Wait for all module promises while executing pending jobs
+            let settled = false;
+            const moduleCompletion = Promise.all(allPromises).then(() => { settled = true; });
+            
+            while (!settled) {
+              // Execute any pending jobs
+              const jobResult = runtime.executePendingJobs();
+              if (jobResult.error) {
+                throw vm.dump(jobResult.error);
+              }
+              
+              // Give the promises a chance to progress
+              await Promise.race([
+                moduleCompletion,
+                new Promise(resolve => setTimeout(resolve, 0))
+              ]);
+            }
+          }
+          
+          // Final execution of any remaining pending jobs
+          const finalJobResult = runtime.executePendingJobs();
+          if (finalJobResult.error) {
+            throw vm.dump(finalJobResult.error);
           }
         }
       })

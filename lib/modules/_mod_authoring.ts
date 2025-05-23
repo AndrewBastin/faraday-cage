@@ -13,7 +13,8 @@ export type CageModuleCtx = {
   vm: QuickJSAsyncContext,
   scope: Scope,
   runtime: QuickJSAsyncRuntime,
-  afterScriptExecutionHooks: Array<() => void>
+  afterScriptExecutionHooks: Array<() => void>,
+  keepAlivePromises: Array<Promise<void>>
 }
 
 export type CageModule = {
