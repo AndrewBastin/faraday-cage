@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { FaradayCage } from "../../main";
-import urlModule from "../url";
+import urlModule from "../urlPolyfill";
 
 describe("URL Module", () => {
   let cage: FaradayCage;
@@ -51,7 +51,7 @@ describe("URL Module", () => {
             if (url.password !== "") {
               throw new Error("password should be empty: " + url.password);
             }
-          `, [urlModule()]);
+          `, [urlModule]);
           
           console.log("Test result:", result);
           
@@ -82,7 +82,7 @@ describe("URL Module", () => {
           if (url.host !== "example.com") {
             throw new Error("host mismatch: " + url.host);
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -94,7 +94,7 @@ describe("URL Module", () => {
           if (url.href !== "https://example.com/path/to/resource") {
             throw new Error("href mismatch: " + url.href);
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -116,7 +116,7 @@ describe("URL Module", () => {
           if (httpsUrl.host !== "example.com") {
             throw new Error("HTTPS host should not include default port: " + httpsUrl.host);
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -131,7 +131,7 @@ describe("URL Module", () => {
               throw new Error("Expected TypeError or 'Invalid URL' message, got: " + e.name + " - " + e.message);
             }
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -149,7 +149,7 @@ describe("URL Module", () => {
           if (url.href !== "https://example.com/path%20with%20spaces?query=hello%20world") {
             throw new Error("href not encoded correctly: " + url.href);
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -166,7 +166,7 @@ describe("URL Module", () => {
           if (url.href !== "https://example.com/new/path?foo=bar#section") {
             throw new Error("href not updated correctly: " + url.href);
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -182,7 +182,7 @@ describe("URL Module", () => {
           if (url.href !== "http://example.com/") {
             throw new Error("href not updated after protocol change: " + url.href);
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -201,7 +201,7 @@ describe("URL Module", () => {
           if (url.port !== "9090") {
             throw new Error("port not updated: " + url.port);
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -215,7 +215,7 @@ describe("URL Module", () => {
           if (!(url.searchParams instanceof URLSearchParams)) {
             throw new Error("searchParams is not an instance of URLSearchParams");
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -229,7 +229,7 @@ describe("URL Module", () => {
           if (url.search !== "?foo=newvalue&baz=qux") {
             throw new Error("search not updated: " + url.search);
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -249,7 +249,7 @@ describe("URL Module", () => {
           if (String(url) !== "https://example.com/path?query=value#hash") {
             throw new Error("String(url) incorrect: " + String(url));
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -265,7 +265,7 @@ describe("URL Module", () => {
           if (params.toString() !== "foo=bar&baz=qux&foo=another") {
             throw new Error("toString() incorrect: " + params.toString());
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -277,7 +277,7 @@ describe("URL Module", () => {
           if (params.toString() !== "foo=bar&baz=qux") {
             throw new Error("toString() incorrect: " + params.toString());
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -289,7 +289,7 @@ describe("URL Module", () => {
           if (params.toString() !== "foo=bar&baz=qux") {
             throw new Error("toString() incorrect: " + params.toString());
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -306,7 +306,7 @@ describe("URL Module", () => {
           if (params2.toString() !== "foo=bar&baz=qux") {
             throw new Error("params2 incorrect: " + params2.toString());
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -322,7 +322,7 @@ describe("URL Module", () => {
           if (params.toString() !== "foo=bar&foo=baz") {
             throw new Error("append failed: " + params.toString());
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -335,7 +335,7 @@ describe("URL Module", () => {
           if (params.toString() !== "foo=qux") {
             throw new Error("set failed: " + params.toString());
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -356,7 +356,7 @@ describe("URL Module", () => {
           if (params.get("missing") !== null) {
             throw new Error("get() should return null for missing key");
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -371,7 +371,7 @@ describe("URL Module", () => {
           if (params.has("baz")) {
             throw new Error("has() should return false for missing key");
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -384,7 +384,7 @@ describe("URL Module", () => {
           if (params.toString() !== "qux=quux") {
             throw new Error("delete failed: " + params.toString());
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -397,7 +397,7 @@ describe("URL Module", () => {
           if (params.toString() !== "a=2&m=3&z=1") {
             throw new Error("sort failed: " + params.toString());
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -411,7 +411,7 @@ describe("URL Module", () => {
           if (params.toString() !== "name=hello+world&emoji=%F0%9F%98%80") {
             throw new Error("encoding incorrect: " + params.toString());
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -438,7 +438,7 @@ describe("URL Module", () => {
           if (results[2].key !== "c" || results[2].value !== "3") {
             throw new Error("forEach third item incorrect");
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -460,7 +460,7 @@ describe("URL Module", () => {
           if (entries[1][0] !== "b" || entries[1][1] !== "2") {
             throw new Error("for...of second item incorrect");
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
@@ -483,7 +483,7 @@ describe("URL Module", () => {
           if (entries.length !== 2 || entries[0][0] !== "a" || entries[0][1] !== "1" || entries[1][0] !== "b" || entries[1][1] !== "2") {
             throw new Error("entries() incorrect: " + JSON.stringify(entries));
           }
-        `, [urlModule()]);
+        `, [urlModule]);
         
         expect(result.type).toBe("ok");
       });
