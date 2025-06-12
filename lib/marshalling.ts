@@ -35,6 +35,8 @@ export function marshalToVM(vm: QuickJSAsyncContext, scope: Scope, value: unknow
     for (let i = 0; i < marshalledValueHandles.length; i++) {
       vm.setProp(arrayHandle, i, marshalledValueHandles[i])
     }
+
+    return arrayHandle
   }
 
   if (value instanceof Error) {
