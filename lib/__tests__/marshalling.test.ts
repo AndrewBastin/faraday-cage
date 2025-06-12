@@ -291,7 +291,7 @@ describe("defineSandboxFn - Data marshalling", () => {
     const testModule = defineCageModule((ctx) => {
       const { vm, scope } = ctx
       
-      const sendData = scope.manage(vm.newFunction("sendData", (...args) => {
+      const sendData = scope.manage(vm.newFunction("sendData", () => {
         const testData = {
           message: "From host",
           number: 999,
@@ -363,7 +363,6 @@ describe("defineSandboxFn - Data marshalling", () => {
   })
 
   it("should handle circular references gracefully", async () => {
-    let capturedResult: any = null
     let errorOccurred = false
     
     const testModule = defineCageModule((ctx) => {
@@ -371,7 +370,7 @@ describe("defineSandboxFn - Data marshalling", () => {
       
       const testCircular = scope.manage(vm.newFunction("testCircular", (...args) => {
         try {
-          capturedResult = vm.dump(args[0])
+          vm.dump(args[0])
         } catch (error) {
           errorOccurred = true
         }
